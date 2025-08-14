@@ -1,24 +1,23 @@
 using System;
 using System.Collections.Generic;
 
-namespace DCIT318_Assignment3_Q1
+namespace DCIT318_Q1
 {
-   
+    // record Transaction
     public record Transaction(int Id, DateTime Date, decimal Amount, string Category);
 
-    // ---------- Interface for processors ----------
+    // ITransactionProcessor interface
     public interface ITransactionProcessor
     {
         void Process(Transaction transaction);
     }
 
-    // ---------- Concrete processors ----------
+    // Processors
     public class BankTransferProcessor : ITransactionProcessor
     {
         public void Process(Transaction transaction)
         {
-            Console.WriteLine($"[BankTransfer] Processing transaction #{transaction.Id}: {transaction.Category} - Amount: {transaction.Amount:C}");
-            // Real implementation would contact bank APIs, etc.
+            Console.WriteLine($"[BankTransfer] Transaction #{transaction.Id}: Category = {transaction.Category}, Amount = {transaction.Amount}");
         }
     }
 
@@ -26,8 +25,7 @@ namespace DCIT318_Assignment3_Q1
     {
         public void Process(Transaction transaction)
         {
-            Console.WriteLine($"[MobileMoney] Processing transaction #{transaction.Id}: {transaction.Category} - Amount: {transaction.Amount:C}");
-            // Real implementation would call mobile payment gateway, etc.
+            Console.WriteLine($"[MobileMoney] Transaction #{transaction.Id}: Category = {transaction.Category}, Amount = {transaction.Amount}");
         }
     }
 
@@ -35,12 +33,11 @@ namespace DCIT318_Assignment3_Q1
     {
         public void Process(Transaction transaction)
         {
-            Console.WriteLine($"[CryptoWallet] Processing transaction #{transaction.Id}: {transaction.Category} - Amount: {transaction.Amount:C}");
-            // Real implementation would interact with blockchain/wallet APIs, etc.
+            Console.WriteLine($"[CryptoWallet] Transaction #{transaction.Id}: Category = {transaction.Category}, Amount = {transaction.Amount}");
         }
     }
 
-    // ---------- Account base class ----------
+    // Base Account class
     public class Account
     {
         public string AccountNumber { get; }
@@ -52,15 +49,14 @@ namespace DCIT318_Assignment3_Q1
             Balance = initialBalance;
         }
 
-        // Default behavior: deduct amount from balance
         public virtual void ApplyTransaction(Transaction transaction)
         {
             Balance -= transaction.Amount;
-            Console.WriteLine($"[Account] Applied transaction #{transaction.Id}. New balance: {Balance:C}");
+            Console.WriteLine($"[Account] Applied transaction #{transaction.Id}. New balance: {Balance}");
         }
     }
 
-    // ---------- Sealed SavingsAccount ----------
+    // Sealed SavingsAccount
     public sealed class SavingsAccount : Account
     {
         public SavingsAccount(string accountNumber, decimal initialBalance)
@@ -71,80 +67,57 @@ namespace DCIT318_Assignment3_Q1
         {
             if (transaction.Amount > Balance)
             {
-                Console.WriteLine($"[SavingsAccount] Insufficient funds for transaction #{transaction.Id}. Transaction amount: {transaction.Amount:C}, Balance: {Balance:C}");
+                Console.WriteLine("Insufficient funds");
                 return;
             }
 
             Balance -= transaction.Amount;
-            Console.WriteLine($"[SavingsAccount] Transaction #{transaction.Id} of {transaction.Amount:C} applied. Updated balance: {Balance:C}");
+            Console.WriteLine($"Updated balance: {Balance}");
         }
     }
 
-    // ---------- FinanceApp (simulation) ----------
+    // FinanceApp
     public class FinanceApp
     {
-        private readonly List<Transaction> _transactions = new();
+        private List<Transaction> _transactions = new();
 
         public void Run()
         {
-            // i. Instantiate a SavingsAccount (example: account number "SA-1001", initial balance 1000)
-            var mySavings = new SavingsAccount("SA-1001", 1000m);
-            Console.WriteLine($"Created SavingsAccount {mySavings.AccountNumber} with initial balance {mySavings.Balance:C}\n");
+            // i. Instantiate SavingsAccount with account number and initial balance (e.g., 1000)
+            var account = new SavingsAccount("SA-0001", 1000m);
 
-            // ii. Create three Transaction records (Groceries, Utilities, Entertainment)
+            // ii. Create three Transaction records with sample values
             var t1 = new Transaction(1, DateTime.Now, 120.50m, "Groceries");
             var t2 = new Transaction(2, DateTime.Now, 300.00m, "Utilities");
             var t3 = new Transaction(3, DateTime.Now, 700.00m, "Entertainment");
 
-            // iii. Use processors to process each transaction
+            // iii. Use processors
             ITransactionProcessor mobileMoney = new MobileMoneyProcessor();
             ITransactionProcessor bankTransfer = new BankTransferProcessor();
             ITransactionProcessor cryptoWallet = new CryptoWalletProcessor();
 
-            Console.WriteLine("Processing transactions via processors:\n");
+            mobileMoney.Process(t1);     // Transaction 1 -> MobileMoneyProcessor
+            bankTransfer.Process(t2);    // Transaction 2 -> BankTransferProcessor
+            cryptoWallet.Process(t3);    // Transaction 3 -> CryptoWalletProcessor
 
-            mobileMoney.Process(t1);   // Transaction 1 -> MobileMoneyProcessor
-            bankTransfer.Process(t2);  // Transaction 2 -> BankTransferProcessor
-            cryptoWallet.Process(t3);  // Transaction 3 -> CryptoWalletProcessor
-
-            Console.WriteLine();
-
-            // iv. Apply each transaction to the SavingsAccount using ApplyTransaction
-            Console.WriteLine("Applying transactions to savings account:\n");
-
-            mySavings.ApplyTransaction(t1); // should succeed (120.50)
-            mySavings.ApplyTransaction(t2); // should succeed if balance sufficient
-            mySavings.ApplyTransaction(t3); // may fail due to insufficient funds
-
-            Console.WriteLine();
+            // iv. Apply each transaction to the SavingsAccount
+            account.ApplyTransaction(t1);
+            account.ApplyTransaction(t2);
+            account.ApplyTransaction(t3);
 
             // v. Add all transactions to _transactions
             _transactions.Add(t1);
             _transactions.Add(t2);
             _transactions.Add(t3);
-
-            // Print transaction summary
-            Console.WriteLine("Transaction summary stored in FinanceApp:");
-            foreach (var tx in _transactions)
-            {
-                Console.WriteLine($"- ID: {tx.Id}, Date: {tx.Date}, Category: {tx.Category}, Amount: {tx.Amount:C}");
-            }
-
-            Console.WriteLine($"\nFinal account balance for {mySavings.AccountNumber}: {mySavings.Balance:C}");
         }
     }
 
-    // ---------- Program entry ----------
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             var app = new FinanceApp();
             app.Run();
-
-            // Keep console open if run outside debugger
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ReadKey();
         }
     }
 }

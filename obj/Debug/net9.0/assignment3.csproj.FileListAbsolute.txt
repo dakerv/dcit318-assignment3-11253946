@@ -1,0 +1,14 @@
+C:\Users\ELITEBOOK\assignment3\bin\Debug\net9.0\assignment3.exe
+C:\Users\ELITEBOOK\assignment3\bin\Debug\net9.0\assignment3.deps.json
+C:\Users\ELITEBOOK\assignment3\bin\Debug\net9.0\assignment3.runtimeconfig.json
+C:\Users\ELITEBOOK\assignment3\bin\Debug\net9.0\assignment3.dll
+C:\Users\ELITEBOOK\assignment3\bin\Debug\net9.0\assignment3.pdb
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.AssemblyInfoInputs.cache
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.AssemblyInfo.cs
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.csproj.CoreCompileInputs.cache
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.dll
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\refint\assignment3.dll
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.pdb
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\assignment3.genruntimeconfig.cache
+C:\Users\ELITEBOOK\assignment3\obj\Debug\net9.0\ref\assignment3.dll
